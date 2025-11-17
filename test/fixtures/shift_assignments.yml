@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  account: one
+  shift: one
+  employee: one
+  status: MyString
+  assigned_by_user_id: 
+  assigned_at: 2025-11-14 23:24:55
+
+two:
+  account: two
+  shift: two
+  employee: two
+  status: MyString
+  assigned_by_user_id: 
+  assigned_at: 2025-11-14 23:24:55

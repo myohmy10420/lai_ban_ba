@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  account: one
+  location: one
+  user: one
+  code: MyString
+  name: MyString
+  phone: MyString
+  employment_type: MyString
+  hourly_rate: 9.99
+  start_on: 2025-11-14
+  end_on: 2025-11-14
+  status: MyString
+
+two:
+  account: two
+  location: two
+  user: two
+  code: MyString
+  name: MyString
+  phone: MyString
+  employment_type: MyString
+  hourly_rate: 9.99
+  start_on: 2025-11-14
+  end_on: 2025-11-14
+  status: MyString
