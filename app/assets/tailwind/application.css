@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@layer base {
+  * {
+    @apply outline-ring/50;
+  }
+  body {
+    @apply bg-slate-900 text-white;
+  }
+}
+
+@layer components {
+  .password-toggle {
+    @apply cursor-pointer;
+  }
+}
+
+/* 你的全站樣式 */
+@import "./global.css";

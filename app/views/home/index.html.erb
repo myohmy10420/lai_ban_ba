@@ -1,4 +1,149 @@
-<div>
-  <h1 class="font-bold text-4xl">Home#index</h1>
-  <p>Find me in app/views/home/index.html.erb</p>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+  <div class="w-full max-w-5xl">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <!-- Left side - Brand section -->
+      <div class="hidden lg:flex flex-col justify-center space-y-8">
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+              <span class="text-white text-xl font-bold">📅</span>
+            </div>
+            <h1 class="text-3xl font-bold text-white">排班系統</h1>
+          </div>
+          <p class="text-slate-400 text-lg leading-relaxed">
+            專業的班次管理平台，幫助您輕鬆安排員工班表，提升團隊效率。
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="flex items-center justify-center h-10 w-10 rounded-lg bg-blue-500/20">
+                <span class="text-blue-400">✓</span>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold">智能排班</h3>
+              <p class="text-slate-400 text-sm mt-1">自動化班次分配，避免衝突</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="flex items-center justify-center h-10 w-10 rounded-lg bg-blue-500/20">
+                <span class="text-blue-400">✓</span>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold">實時通知</h3>
+              <p class="text-slate-400 text-sm mt-1">員工即時收到班表異動</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="flex items-center justify-center h-10 w-10 rounded-lg bg-blue-500/20">
+                <span class="text-blue-400">✓</span>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold">數據分析</h3>
+              <p class="text-slate-400 text-sm mt-1">全面的排班統計與報告</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right side - Login form -->
+      <div class="flex justify-center">
+        <div class="w-full max-w-md bg-slate-800 border border-slate-700 shadow-2xl rounded-lg">
+          <div class="p-8 space-y-6">
+            <div class="space-y-2 text-center">
+              <h2 class="text-2xl font-bold text-white">歡迎回來</h2>
+              <p class="text-slate-400">登入您的排班系統帳號</p>
+            </div>
+
+            <!-- Form for session creation -->
+            <%= form_with url: user_session_path, method: :post, local: true, class: "space-y-5" do |f| %>
+              <% if @user&.errors&.any? %>
+                <div class="bg-red-500/20 border border-red-500 text-red-200 rounded-lg p-3 text-sm">
+                  <p class="font-semibold mb-1">登入失敗</p>
+                  <ul class="list-disc pl-5">
+                    <% @user.errors.full_messages.each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+
+              <div class="space-y-2">
+                <%= f.label :email, "電子郵件", class: "text-slate-300 block text-sm font-medium" %>
+                <%= f.email_field :email, placeholder: "your@email.com", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 transition", required: true %>
+              </div>
+
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <%= f.label :password, "密碼", class: "text-slate-300 block text-sm font-medium" %>
+                  <%= link_to "忘記密碼?", "#", class: "text-xs text-blue-400 hover:text-blue-300 transition" %>
+                </div>
+                <div class="relative">
+                  <%= f.password_field :password, placeholder: "••••••••", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 pr-10 transition", required: true %>
+                  <!-- Password visibility toggle button -->
+                  <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition password-toggle" data-toggle="password">
+                    <svg class="w-4 h-4 eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2 rounded-lg transition">
+                <span class="flex items-center justify-center gap-2 submit-button-content">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8M11 17l4-4m0 0l4-4m-4 4l-4-4m4 4l4 4"></path>
+                  </svg>
+                  登入
+                </span>
+              </button>
+            <% end %>
+
+            <div class="relative">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-slate-600"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-slate-800 text-slate-400">或</span>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <%= button_to "用 Google 登入", "/auth/google", method: :post, class: "w-full bg-slate-700 hover:bg-slate-600 text-white border border-slate-600 rounded-md py-2 px-3 transition flex items-center justify-center gap-2" %>
+              
+              <%= button_to "用公司帳號登入", "/auth/company", method: :post, class: "w-full bg-slate-700 hover:bg-slate-600 text-white border border-slate-600 rounded-md py-2 px-3 transition flex items-center justify-center gap-2" %>
+            </div>
+
+            <p class="text-center text-sm text-slate-400">
+              還沒有帳號?
+              <%= link_to "立即註冊", "#", class: "text-blue-400 hover:text-blue-300 font-semibold transition" %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- JavaScript for password visibility toggle -->
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.querySelector('.password-toggle');
+    const passwordField = document.querySelector('input[name="password"]');
+    
+    if (toggleBtn && passwordField) {
+      toggleBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+      });
+    }
+  });
+</script>
