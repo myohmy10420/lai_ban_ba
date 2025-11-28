@@ -5,7 +5,7 @@
       <div class="hidden lg:flex flex-col justify-center space-y-8">
         <div class="space-y-4">
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
               <span class="text-white text-xl font-bold">📅</span>
             </div>
             <h1 class="text-3xl font-bold text-white">排班系統</h1>
@@ -82,10 +82,10 @@
               <div class="space-y-2">
                 <div class="flex items-center justify-between">
                   <%= f.label :password, "密碼", class: "text-slate-300 block text-sm font-medium" %>
-                  <%= link_to "忘記密碼?", "#", class: "text-xs text-blue-400 hover:text-blue-300 transition" %>
+                  <%= link_to "忘記密碼?", new_user_password_path, class: "text-xs text-blue-400 hover:text-blue-300 transition" %>
                 </div>
                 <div class="relative">
-                  <%= f.password_field :password, placeholder: "••••••••", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 pr-10 transition", required: true %>
+                  <%= f.password_field :password, placeholder: "••••••••", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 transition", required: true %>
                   <!-- Password visibility toggle button -->
                   <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition password-toggle" data-toggle="password">
                     <svg class="w-4 h-4 eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -97,12 +97,7 @@
               </div>
 
               <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2 rounded-lg transition">
-                <span class="flex items-center justify-center gap-2 submit-button-content">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8M11 17l4-4m0 0l4-4m-4 4l-4-4m4 4l4 4"></path>
-                  </svg>
-                  登入
-                </span>
+                登入
               </button>
             <% end %>
 
@@ -123,7 +118,7 @@
 
             <p class="text-center text-sm text-slate-400">
               還沒有帳號?
-              <%= link_to "立即註冊", "#", class: "text-blue-400 hover:text-blue-300 font-semibold transition" %>
+              <%= link_to "立即註冊", new_user_registration_path, class: "text-blue-400 hover:text-blue-300 font-semibold transition" %>
             </p>
           </div>
         </div>

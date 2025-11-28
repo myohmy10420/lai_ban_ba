@@ -1,16 +1,27 @@
-<h2>Forgot your password?</h2>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="bg-slate-800 border border-slate-700 shadow-2xl rounded-lg">
+      <div class="p-8 space-y-6">
+        <div class="space-y-2 text-center">
+          <h2 class="text-2xl font-bold text-white">重設密碼</h2>
+          <p class="text-slate-400">輸入您的電子郵件地址，我們將發送重設連結</p>
+        </div>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }, class: "space-y-5") do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+          <div class="space-y-2">
+            <%= f.label :email, "電子郵件", class: "text-slate-300 block text-sm font-medium" %>
+            <%= f.email_field :email, placeholder: "your@email.com", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 transition", autofocus: true, autocomplete: "email", required: true %>
+          </div>
+
+          <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2 rounded-lg transition">
+            發送重設指示
+          </button>
+        <% end %>
+
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
