@@ -9,15 +9,17 @@
         </div>
         <span class="font-bold text-xl tracking-tight text-orange-600">來班吧</span>
       </div>
-      
+
       <!-- Desktop Menu -->
       <div class="hidden md:flex items-center space-x-8">
         <a href="#" class="text-slate-600 hover:text-orange-500 font-medium transition">功能介紹</a>
         <a href="#" class="text-slate-600 hover:text-orange-500 font-medium transition">餐飲案例</a>
         <a href="#" class="text-slate-600 hover:text-orange-500 font-medium transition">收費方案</a>
-        <button class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-full font-medium transition shadow-lg shadow-orange-200">
-          免費試用
-        </button>
+        <%= link_to new_user_session_path do %>
+          <button class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-full font-medium transition shadow-lg shadow-orange-200">
+            免費試用
+          </button>
+        <% end %>
       </div>
 
       <!-- Mobile Menu Button -->
@@ -28,24 +30,26 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Mobile Menu Dropdown -->
   <div data-mobile-menu-target="menu" class="hidden md:hidden bg-white border-t border-slate-100 p-4 space-y-4 shadow-lg">
     <a href="#" class="block text-slate-600 font-medium">功能介紹</a>
     <a href="#" class="block text-slate-600 font-medium">餐飲案例</a>
     <a href="#" class="block text-slate-600 font-medium">收費方案</a>
-    <button class="w-full bg-orange-500 text-white px-5 py-2 rounded-lg font-medium">
-      免費試用
-    </button>
+    <%= link_to new_user_session_path do %>
+      <button class="w-full bg-orange-500 text-white px-5 py-2 rounded-lg font-medium">
+        免費試用
+      </button>
+    <% end %>
   </div>
 </nav>
 
 <!-- Hero Section -->
-<header class="pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 relative overflow-hidden">
+<header class="pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 relative overflow-hidden bg-slate-50">
   <!-- 背景裝飾 -->
-  <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-100 rounded-full blur-3xl opacity-50"></div>
-  <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yellow-100 rounded-full blur-3xl opacity-50"></div>
-  
+  <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+  <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yellow-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
   <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
     <!-- 左側文案 -->
     <div class="text-center lg:text-left space-y-6">
@@ -61,7 +65,7 @@
         <span class="text-orange-500">三分鐘</span> 排好一週班表
       </h1>
       <p class="text-lg text-slate-600 max-w-xl mx-auto lg:mx-0">
-        專為餐廳、咖啡廳、手搖飲設計。支援手機排班、自動計算工時成本，讓店長專注於服務客人，而不是處理表格。
+      專為餐廳、咖啡廳、手搖飲設計。支援手機排班、自動計算工時成本，讓店長專注於服務客人，而不是處理表格。
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
         <button class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl shadow-orange-200 transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
@@ -69,8 +73,8 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
         </button>
         <button class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-8 py-4 rounded-xl font-bold text-lg transition flex items-center justify-center gap-2">
-           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-           下載員工 App
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          下載員工 App
         </button>
       </div>
     </div>
@@ -84,7 +88,7 @@
         </h3>
         <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">點擊空格直接排班</span>
       </div>
-      
+
       <div class="space-y-3">
         <!-- Item 1 (已填) -->
         <div data-action="click->demo-schedule#toggle" data-filled="true" data-staff="小明" class="cursor-pointer p-4 rounded-xl border-2 border-orange-500 bg-orange-50 transition-all duration-200 flex justify-between items-center group">
@@ -99,8 +103,8 @@
           </div>
           <div class="flex items-center gap-3">
             <div data-demo-schedule-target="content" class="flex items-center gap-2">
-                <span class="text-sm font-medium text-slate-700 bg-white px-3 py-1 rounded-full shadow-sm">小明</span>
-                <svg class="text-orange-500 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span class="text-sm font-medium text-slate-700 bg-white px-3 py-1 rounded-full shadow-sm">小明</span>
+              <svg class="text-orange-500 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
           </div>
         </div>
@@ -109,7 +113,7 @@
         <div data-action="click->demo-schedule#toggle" data-filled="true" data-staff="阿豪" class="cursor-pointer p-4 rounded-xl border-2 border-orange-500 bg-orange-50 transition-all duration-200 flex justify-between items-center group">
           <div class="flex items-center gap-4">
             <div class="p-2 rounded-lg bg-orange-100 text-orange-600">
-               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12h-2m-8 0H6m6 6h-2m4-10H8m2-4v16m6-10v8m-10-8v8"></path></svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12h-2m-8 0H6m6 6h-2m4-10H8m2-4v16m6-10v8m-10-8v8"></path></svg>
             </div>
             <div>
               <p class="font-bold text-slate-800" data-demo-schedule-target="title">早班內場</p>
@@ -118,8 +122,8 @@
           </div>
           <div class="flex items-center gap-3">
             <div data-demo-schedule-target="content" class="flex items-center gap-2">
-                <span class="text-sm font-medium text-slate-700 bg-white px-3 py-1 rounded-full shadow-sm">阿豪</span>
-                <svg class="text-orange-500 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span class="text-sm font-medium text-slate-700 bg-white px-3 py-1 rounded-full shadow-sm">阿豪</span>
+              <svg class="text-orange-500 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
           </div>
         </div>
@@ -128,7 +132,7 @@
         <div data-action="click->demo-schedule#toggle" data-filled="false" data-staff="安安" class="cursor-pointer p-4 rounded-xl border-2 border-slate-200 border-dashed hover:border-orange-300 hover:bg-slate-50 transition-all duration-200 flex justify-between items-center group">
           <div class="flex items-center gap-4">
             <div data-demo-schedule-target="iconBg" class="p-2 rounded-lg bg-slate-100 text-slate-400">
-               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
             </div>
             <div>
               <p class="font-bold text-slate-400" data-demo-schedule-target="title">晚班外場</p>
@@ -136,32 +140,32 @@
             </div>
           </div>
           <div class="flex items-center gap-3">
-             <div data-demo-schedule-target="content">
-                <span class="text-sm text-slate-400 group-hover:text-orange-500 font-medium">+ 點擊安排</span>
-             </div>
+            <div data-demo-schedule-target="content">
+              <span class="text-sm text-slate-400 group-hover:text-orange-500 font-medium">+ 點擊安排</span>
+            </div>
           </div>
         </div>
 
-         <!-- Item 4 (未填) -->
-         <div data-action="click->demo-schedule#toggle" data-filled="false" data-staff="阿姨" class="cursor-pointer p-4 rounded-xl border-2 border-slate-200 border-dashed hover:border-orange-300 hover:bg-slate-50 transition-all duration-200 flex justify-between items-center group">
-            <div class="flex items-center gap-4">
-              <div data-demo-schedule-target="iconBg" class="p-2 rounded-lg bg-slate-100 text-slate-400">
-                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
-              </div>
-              <div>
-                <p class="font-bold text-slate-400" data-demo-schedule-target="title">晚班洗碗</p>
-                <p class="text-xs text-slate-500 flex items-center gap-1">18:00 - 23:00</p>
-              </div>
+        <!-- Item 4 (未填) -->
+        <div data-action="click->demo-schedule#toggle" data-filled="false" data-staff="阿姨" class="cursor-pointer p-4 rounded-xl border-2 border-slate-200 border-dashed hover:border-orange-300 hover:bg-slate-50 transition-all duration-200 flex justify-between items-center group">
+          <div class="flex items-center gap-4">
+            <div data-demo-schedule-target="iconBg" class="p-2 rounded-lg bg-slate-100 text-slate-400">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
             </div>
-            <div class="flex items-center gap-3">
-               <div data-demo-schedule-target="content">
-                  <span class="text-sm text-slate-400 group-hover:text-orange-500 font-medium">+ 點擊安排</span>
-               </div>
+            <div>
+              <p class="font-bold text-slate-400" data-demo-schedule-target="title">晚班洗碗</p>
+              <p class="text-xs text-slate-500 flex items-center gap-1">18:00 - 23:00</p>
             </div>
           </div>
+          <div class="flex items-center gap-3">
+            <div data-demo-schedule-target="content">
+              <span class="text-sm text-slate-400 group-hover:text-orange-500 font-medium">+ 點擊安排</span>
+            </div>
+          </div>
+        </div>
 
       </div>
-      
+
       <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-sm">
         <span class="text-slate-500">預估人事成本：</span>
         <!-- 動態更新成本 -->
@@ -187,7 +191,7 @@
         </div>
         <h3 class="text-xl font-bold text-slate-800 mb-3">員工自主劃假</h3>
         <p class="text-slate-600 leading-relaxed">
-          員工透過手機 App 提交可上班時間與休假需求，系統自動彙整，不用再傳 LINE 或是寫紙條。
+        員工透過手機 App 提交可上班時間與休假需求，系統自動彙整，不用再傳 LINE 或是寫紙條。
         </p>
       </div>
 
@@ -198,7 +202,7 @@
         </div>
         <h3 class="text-xl font-bold text-slate-800 mb-3">即時成本控管</h3>
         <p class="text-slate-600 leading-relaxed">
-          排班同時計算預估薪資，即時顯示人事佔比，避免爆班或超時加班費，利潤抓得更準。
+        排班同時計算預估薪資，即時顯示人事佔比，避免爆班或超時加班費，利潤抓得更準。
         </p>
       </div>
 
@@ -209,7 +213,7 @@
         </div>
         <h3 class="text-xl font-bold text-slate-800 mb-3">手機一鍵發布</h3>
         <p class="text-slate-600 leading-relaxed">
-          班表確認後，一鍵推播通知所有員工。如有臨時換班，也能即時更新，資訊不漏接。
+        班表確認後，一鍵推播通知所有員工。如有臨時換班，也能即時更新，資訊不漏接。
         </p>
       </div>
     </div>
@@ -222,28 +226,28 @@
     <div class="col-span-1 md:col-span-2">
       <div class="flex items-center gap-2 mb-4">
         <div class="bg-orange-600 p-1 rounded-md">
-           <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
         </div>
         <span class="font-bold text-xl text-white">來班吧</span>
       </div>
       <p class="text-sm max-w-xs">
-        致力於讓餐飲業的人事管理更簡單、更直覺。讓科技解決繁瑣，讓您可以專注於美味。
+      致力於讓餐飲業的人事管理更簡單、更直覺。讓科技解決繁瑣，讓您可以專注於美味。
       </p>
     </div>
     <!-- 簡單的 Footer 連結 -->
     <div>
-       <h4 class="text-white font-bold mb-4">產品</h4>
-       <ul class="space-y-2 text-sm">
-         <li><a href="#" class="hover:text-orange-500 transition">功能特色</a></li>
-         <li><a href="#" class="hover:text-orange-500 transition">價格方案</a></li>
-       </ul>
+      <h4 class="text-white font-bold mb-4">產品</h4>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#" class="hover:text-orange-500 transition">功能特色</a></li>
+        <li><a href="#" class="hover:text-orange-500 transition">價格方案</a></li>
+      </ul>
     </div>
     <div>
-        <h4 class="text-white font-bold mb-4">聯絡</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="#" class="hover:text-orange-500 transition">使用教學</a></li>
-          <li><a href="#" class="hover:text-orange-500 transition">客服信箱</a></li>
-        </ul>
-     </div>
+      <h4 class="text-white font-bold mb-4">聯絡</h4>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#" class="hover:text-orange-500 transition">使用教學</a></li>
+        <li><a href="#" class="hover:text-orange-500 transition">客服信箱</a></li>
+      </ul>
+    </div>
   </div>
 </footer>
