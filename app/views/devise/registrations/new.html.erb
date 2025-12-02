@@ -1,45 +1,76 @@
-<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-  <div class="w-full max-w-md">
-    <div class="bg-slate-800 border border-slate-700 shadow-2xl rounded-lg">
-      <div class="p-8 space-y-6">
-        <div class="space-y-2 text-center">
-          <h2 class="text-2xl font-bold text-white">建立新帳號</h2>
-          <p class="text-slate-400">加入排班系統</p>
+<div class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden w-full">
+  <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-100 rounded-full blur-3xl opacity-50 pointer-events-none z-0"></div>
+  <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yellow-100 rounded-full blur-3xl opacity-50 pointer-events-none z-0"></div>
+
+  <!-- 強制 mx-auto 和 max-w-md -->
+  <div class="mx-auto w-full max-w-md relative z-10">
+    <div class="flex justify-center items-center gap-2 mb-6">
+      <div class="bg-orange-500 p-1.5 rounded-lg">
+        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+      </div>
+      <span class="font-bold text-2xl tracking-tight text-orange-600">來班吧</span>
+    </div>
+    <h2 class="text-center text-3xl font-extrabold text-slate-900">
+      建立您的帳號
+    </h2>
+    <p class="mt-2 text-center text-sm text-slate-600">
+      已經是會員了嗎？
+      <a href="<%= new_session_path(resource_name) %>" class="font-medium text-orange-600 hover:text-orange-500 transition">
+        直接登入
+      </a>
+    </p>
+  </div>
+
+  <!-- 強制 mx-auto 和 max-w-md -->
+  <div class="mt-8 mx-auto w-full max-w-md relative z-10">
+    <div class="bg-white py-8 px-4 shadow-xl shadow-orange-100 rounded-2xl sm:px-10 border border-slate-100">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div>
+          <%= f.label :email, "電子信箱", class: "block text-sm font-medium text-slate-700" %>
+          <div class="mt-1">
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition" %>
+          </div>
         </div>
 
-        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), class: "space-y-5") do |f| %>
-          <%= render "devise/shared/error_messages", resource: resource %>
-
-          <div class="space-y-2">
-            <%= f.label :name, "姓名", class: "text-slate-300 block text-sm font-medium" %>
-            <%= f.text_field :name, placeholder: "請輸入姓名", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 transition", required: true %>
+        <div data-controller="password-visibility">
+          <%= f.label :password, "設定密碼", class: "block text-sm font-medium text-slate-700" %>
+          <% if @minimum_password_length %>
+          <span class="text-xs text-slate-400">(最少 <%= @minimum_password_length %> 個字元)</span>
+          <% end %>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <%= f.password_field :password, autocomplete: "new-password", data: { password_visibility_target: "input" }, class: "appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm pr-10 transition" %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer focus:outline-none">
+              <svg data-password-visibility-target="icon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
           </div>
+        </div>
 
-          <div class="space-y-2">
-            <%= f.label :email, "電子郵件", class: "text-slate-300 block text-sm font-medium" %>
-            <%= f.email_field :email, placeholder: "your@email.com", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 transition", autofocus: true, autocomplete: "email", required: true %>
+        <div data-controller="password-visibility">
+          <%= f.label :password_confirmation, "確認密碼", class: "block text-sm font-medium text-slate-700" %>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", data: { password_visibility_target: "input" }, class: "appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm pr-10 transition" %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer focus:outline-none">
+              <svg data-password-visibility-target="icon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
           </div>
+        </div>
 
-          <div class="space-y-2">
-            <%= f.label :password, "密碼", class: "text-slate-300 block text-sm font-medium" %>
-            <% if @minimum_password_length %>
-              <p class="text-xs text-slate-400">最少 <%= @minimum_password_length %> 個字元</p>
-            <% end %>
-            <%= f.password_field :password, placeholder: "••••••••", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 transition", autocomplete: "new-password", required: true %>
-          </div>
+        <div>
+          <%= f.submit "立即註冊", class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition transform hover:-translate-y-0.5" %>
+        </div>
 
-          <div class="space-y-2">
-            <%= f.label :password_confirmation, "確認密碼", class: "text-slate-300 block text-sm font-medium" %>
-            <%= f.password_field :password_confirmation, placeholder: "••••••••", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 transition", autocomplete: "new-password", required: true %>
-          </div>
-
-          <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2 rounded-lg transition">
-            建立帳號
-          </button>
-        <% end %>
-
-        <%= render "devise/shared/links" %>
-      </div>
+        <p class="text-xs text-center text-slate-400 mt-4">
+            註冊即代表您同意我們的 <a href="#" class="underline hover:text-orange-500">服務條款</a> 與 <a href="#" class="underline hover:text-orange-500">隱私權政策</a>
+        </p>
+      <% end %>
     </div>
   </div>
 </div>

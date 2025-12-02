@@ -1,26 +1,45 @@
-<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-  <div class="w-full max-w-md">
-    <div class="bg-slate-800 border border-slate-700 shadow-2xl rounded-lg">
-      <div class="p-8 space-y-6">
-        <div class="space-y-2 text-center">
-          <h2 class="text-2xl font-bold text-white">重設密碼</h2>
-          <p class="text-slate-400">輸入您的電子郵件地址，我們將發送重設連結</p>
+<div class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden w-full">
+  <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-100 rounded-full blur-3xl opacity-50 pointer-events-none z-0"></div>
+  <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yellow-100 rounded-full blur-3xl opacity-50 pointer-events-none z-0"></div>
+
+  <!-- 強制 mx-auto 和 max-w-md -->
+  <div class="mx-auto w-full max-w-md relative z-10">
+    <div class="flex justify-center items-center gap-2 mb-6">
+       <div class="bg-orange-500 p-1.5 rounded-lg">
+        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+      </div>
+      <span class="font-bold text-2xl tracking-tight text-orange-600">來班吧</span>
+    </div>
+    <h2 class="text-center text-3xl font-extrabold text-slate-900">
+      重設您的密碼
+    </h2>
+    <p class="mt-2 text-center text-sm text-slate-600">
+      輸入您的電子信箱，我們將寄送重設連結給您。
+    </p>
+  </div>
+
+  <!-- 強制 mx-auto 和 max-w-md -->
+  <div class="mt-8 mx-auto w-full max-w-md relative z-10">
+    <div class="bg-white py-8 px-4 shadow-xl shadow-orange-100 rounded-2xl sm:px-10 border border-slate-100">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "space-y-6" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div>
+          <%= f.label :email, "電子信箱", class: "block text-sm font-medium text-slate-700" %>
+          <div class="mt-1">
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition" %>
+          </div>
         </div>
 
-        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }, class: "space-y-5") do |f| %>
-          <%= render "devise/shared/error_messages", resource: resource %>
+        <div>
+          <%= f.submit "發送重設密碼信件", class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition transform hover:-translate-y-0.5" %>
+        </div>
+      <% end %>
 
-          <div class="space-y-2">
-            <%= f.label :email, "電子郵件", class: "text-slate-300 block text-sm font-medium" %>
-            <%= f.email_field :email, placeholder: "your@email.com", class: "w-full bg-slate-700 border border-slate-600 text-white placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 rounded-md px-3 py-2 transition", autofocus: true, autocomplete: "email", required: true %>
-          </div>
-
-          <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2 rounded-lg transition">
-            發送重設指示
-          </button>
-        <% end %>
-
-        <%= render "devise/shared/links" %>
+      <div class="mt-6">
+         <a href="<%= new_session_path(resource_name) %>" class="w-full flex justify-center py-3 px-4 border border-slate-300 rounded-xl shadow-sm text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 focus:outline-none transition">
+            返回登入
+         </a>
       </div>
     </div>
   </div>
