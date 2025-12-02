@@ -1,25 +1,66 @@
-<h2>Change your password</h2>
+<div class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden w-full">
+  <!-- 背景裝飾 -->
+  <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-100 rounded-full blur-3xl opacity-50 pointer-events-none z-0"></div>
+  <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yellow-100 rounded-full blur-3xl opacity-50 pointer-events-none z-0"></div>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :reset_password_token %>
-
-  <div class="field">
-    <%= f.label :password, "New password" %><br />
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em><br />
-    <% end %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "new-password" %>
+  <!-- 標題區域 -->
+  <div class="mx-auto w-full max-w-md relative z-10">
+    <div class="flex justify-center items-center gap-2 mb-6">
+      <div class="bg-orange-500 p-1.5 rounded-lg shadow-md shadow-orange-200">
+        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+      </div>
+      <span class="font-bold text-2xl tracking-tight text-orange-600">OrangeShift</span>
+    </div>
+    <h2 class="text-center text-3xl font-extrabold text-slate-900">
+      設定新密碼
+    </h2>
+    <p class="mt-2 text-center text-sm text-slate-600">
+      請輸入您的新密碼，確保帳號安全。
+    </p>
   </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation, "Confirm new password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+  <!-- 表單區域 -->
+  <div class="mt-8 mx-auto w-full max-w-md relative z-10">
+    <div class="bg-white py-8 px-4 shadow-xl shadow-orange-100/50 rounded-2xl sm:px-10 border border-slate-100">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+        <%= f.hidden_field :reset_password_token %>
 
-  <div class="actions">
-    <%= f.submit "Change my password" %>
-  </div>
-<% end %>
+        <div data-controller="password-visibility">
+          <div class="flex justify-between items-end mb-1">
+            <%= f.label :password, "新密碼", class: "block text-sm font-bold text-slate-700" %>
+            <% if @minimum_password_length %>
+              <span class="text-xs text-slate-400 font-medium">(最少 <%= @minimum_password_length %> 個字元)</span>
+            <% end %>
+          </div>
+          <div class="relative rounded-xl shadow-sm">
+            <%= f.password_field :password, autofocus: true, autocomplete: "new-password", data: { password_visibility_target: "input" }, class: "appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm pr-10 transition" %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-orange-500 cursor-pointer focus:outline-none transition-colors">
+              <svg data-password-visibility-target="icon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
+          </div>
+        </div>
 
-<%= render "devise/shared/links" %>
+        <div data-controller="password-visibility">
+          <%= f.label :password_confirmation, "確認新密碼", class: "block text-sm font-bold text-slate-700 mb-1" %>
+          <div class="relative rounded-xl shadow-sm">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", data: { password_visibility_target: "input" }, class: "appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm pr-10 transition" %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-orange-500 cursor-pointer focus:outline-none transition-colors">
+              <svg data-password-visibility-target="icon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <%= f.submit "確認更改密碼", class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md shadow-orange-200 text-sm font-bold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition transform hover:-translate-y-0.5 active:translate-y-0" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
