@@ -19,7 +19,7 @@
 
   <div class="mt-8 mx-auto w-full max-w-md relative z-10">
     <div class="bg-white py-8 px-4 shadow-xl shadow-orange-100/50 rounded-2xl sm:px-10 border border-slate-100">
-      <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: "space-y-6" }) do |f| %>
+      <%= form_with(model: resource, scope: resource_name, url: confirmation_path(resource_name), html: { class: "space-y-6" }, data: { turbo: false }) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
 
         <div>
