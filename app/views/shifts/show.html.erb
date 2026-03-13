@@ -1,0 +1,117 @@
+<% content_for :page_title, "班次詳情" %>
+<% content_for :header_actions do %>
+  <%= link_to "編輯", edit_shift_path(@shift), class: "text-sm text-slate-600 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition" %>
+  <%= button_to "刪除", shift_path(@shift), method: :delete,
+        data: { turbo_confirm: "確定刪除此班次？" },
+        class: "text-sm text-red-500 border border-red-200 px-4 py-2 rounded-lg hover:bg-red-50 transition cursor-pointer" %>
+<% end %>
+
+<div class="grid grid-cols-3 gap-5">
+  <!-- Left: Shift info + Assign -->
+  <div class="col-span-2 space-y-5">
+
+    <!-- Shift info card -->
+    <div class="bg-white rounded-xl border border-slate-200 p-5">
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <div class="text-slate-400 mb-0.5">門市</div>
+          <div class="font-medium text-slate-800"><%= @shift.location.name %></div>
+        </div>
+        <div>
+          <div class="text-slate-400 mb-0.5">職位</div>
+          <div class="font-medium text-slate-800">
+            <%= ApplicationHelper::ROLE_TAG_I18N[@shift.role_tag] || @shift.role_tag %>
+          </div>
+        </div>
+        <div>
+          <div class="text-slate-400 mb-0.5">時間</div>
+          <div class="font-medium text-slate-800">
+            <%= @shift.starts_at.strftime("%-m/%-d %H:%M") %> –
+            <%= @shift.ends_at.strftime("%H:%M") %>
+            <span class="text-slate-400 font-normal">（<%= @shift.duration_hours %>hr）</span>
+          </div>
+        </div>
+        <div>
+          <div class="text-slate-400 mb-0.5">需要人數</div>
+          <div class="font-medium <%= @shift.fully_staffed? ? 'text-green-600' : 'text-amber-500' %>">
+            <%= @shift.shift_assignments.where(status: %w[assigned confirmed]).count %> /
+            <%= @shift.required_headcount %> 人
+            <span class="text-xs font-normal ml-1">
+              <%= @shift.fully_staffed? ? "✓ 人員齊全" : "尚未補齊" %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assigned employees -->
+    <div class="bg-white rounded-xl border border-slate-200">
+      <div class="px-5 py-4 border-b border-slate-100 font-semibold text-slate-800 text-sm">已指派員工</div>
+      <% if @shift.shift_assignments.empty? %>
+        <div class="py-8 text-center text-slate-400 text-sm">尚未指派員工</div>
+      <% else %>
+        <div class="divide-y divide-slate-100">
+          <% @shift.shift_assignments.each do |assignment| %>
+            <% status_class = {
+                "assigned" => "bg-blue-100 text-blue-700",
+                "confirmed" => "bg-green-100 text-green-700",
+                "declined" => "bg-red-100 text-red-700",
+                "cancelled" => "bg-slate-100 text-slate-500"
+              }[assignment.status] %>
+            <div class="px-5 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-semibold text-sm">
+                  <%= assignment.employee.name.first %>
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-slate-800"><%= assignment.employee.name %></div>
+                  <% if assignment.assigned_by_user %>
+                    <div class="text-xs text-slate-400">由 <%= assignment.assigned_by_user.name %> 指派</div>
+                  <% end %>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="px-2 py-0.5 rounded-full text-xs font-medium <%= status_class %>">
+                  <%= ApplicationHelper::ASSIGNMENT_STATUS_I18N[assignment.status] || assignment.status %>
+                </span>
+                <% if current_membership&.manager? || current_membership&.owner? %>
+                  <%= button_to "移除", shift_assignment_path(assignment), method: :delete,
+                        data: { turbo_confirm: "確定移除 #{assignment.employee.name}？" },
+                        class: "text-xs text-slate-400 hover:text-red-500 transition bg-transparent border-0 p-0 cursor-pointer" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Right: Assign employee panel -->
+  <% if (current_membership&.manager? || current_membership&.owner?) && @available_employees.any? %>
+    <div class="bg-white rounded-xl border border-slate-200 h-fit sticky top-20">
+      <div class="px-5 py-4 border-b border-slate-100 font-semibold text-slate-800 text-sm">指派員工</div>
+      <div class="p-4 space-y-2">
+        <% @available_employees.each do |employee| %>
+          <%= form_with url: shift_shift_assignments_path(@shift), method: :post, class: "flex items-center justify-between py-1.5" do |f| %>
+            <%= f.hidden_field :shift_assignment, value: "" %>
+            <input type="hidden" name="shift_assignment[employee_id]" value="<%= employee.id %>">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 text-xs font-semibold">
+                <%= employee.name.first %>
+              </div>
+              <span class="text-sm text-slate-700"><%= employee.name %></span>
+            </div>
+            <%= f.submit "指派",
+                  class: "text-xs bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 px-3 py-1 rounded-lg transition cursor-pointer" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% elsif !@available_employees.any? && !@shift.fully_staffed? %>
+    <div class="bg-amber-50 border border-amber-100 rounded-xl p-5 h-fit">
+      <div class="text-sm font-medium text-amber-700 mb-1">無可用員工</div>
+      <p class="text-xs text-amber-600">所有在職員工都已被指派到此班次</p>
+    </div>
+  <% end %>
+</div>

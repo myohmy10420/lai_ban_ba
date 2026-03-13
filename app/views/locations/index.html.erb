@@ -1,0 +1,44 @@
+<% content_for :page_title, "門市管理" %>
+<% content_for :header_actions do %>
+  <%= link_to "新增門市", new_location_path, class: "bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition" %>
+<% end %>
+
+<div class="bg-white rounded-xl border border-slate-200">
+  <% if @locations.empty? %>
+    <div class="py-16 text-center">
+      <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      <p class="text-slate-400 text-sm">還沒有門市</p>
+      <%= link_to "新增第一間門市", new_location_path, class: "mt-2 inline-block text-sm text-orange-500 hover:underline" %>
+    </div>
+  <% else %>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-100 text-left">
+          <th class="px-5 py-3 font-medium text-slate-500">名稱</th>
+          <th class="px-5 py-3 font-medium text-slate-500">地址</th>
+          <th class="px-5 py-3 font-medium text-slate-500">員工數</th>
+          <th class="px-5 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <% @locations.each do |location| %>
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-5 py-4 font-medium text-slate-800"><%= location.name %></td>
+            <td class="px-5 py-4 text-slate-500"><%= location.address.presence || "—" %></td>
+            <td class="px-5 py-4 text-slate-500"><%= location.employees.active.count %> 人</td>
+            <td class="px-5 py-4 text-right">
+              <div class="flex items-center justify-end gap-3">
+                <%= link_to "編輯", edit_location_path(location), class: "text-slate-400 hover:text-orange-500 transition" %>
+                <%= button_to "刪除", location_path(location), method: :delete,
+                      data: { turbo_confirm: "確定刪除「#{location.name}」？此操作無法復原。" },
+                      class: "text-slate-400 hover:text-red-500 transition bg-transparent border-0 p-0 cursor-pointer" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
