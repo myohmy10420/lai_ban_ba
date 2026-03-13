@@ -1,0 +1,7 @@
+<% content_for :page_title, "編輯門市" %>
+
+<div class="max-w-lg bg-white rounded-xl border border-slate-200 p-6">
+  <%= form_with model: @location, url: location_path(@location), method: :patch do |f| %>
+    <%= render "form", location: @location, f: f %>
+  <% end %>
+</div>

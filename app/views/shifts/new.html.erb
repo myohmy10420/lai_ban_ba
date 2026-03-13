@@ -1,0 +1,7 @@
+<% content_for :page_title, "新增班次" %>
+
+<div class="max-w-lg bg-white rounded-xl border border-slate-200 p-6">
+  <%= form_with model: @shift, url: shifts_path do |f| %>
+    <%= render "form", shift: @shift, f: f %>
+  <% end %>
+</div>
