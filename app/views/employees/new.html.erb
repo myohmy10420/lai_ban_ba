@@ -1,0 +1,7 @@
+<% content_for :page_title, "新增員工" %>
+
+<div class="max-w-2xl bg-white rounded-xl border border-slate-200 p-6">
+  <%= form_with model: @employee, url: employees_path do |f| %>
+    <%= render "form", employee: @employee, f: f %>
+  <% end %>
+</div>
