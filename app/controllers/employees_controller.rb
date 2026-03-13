@@ -1,4 +1,5 @@
 class EmployeesController < ApplicationController
+  layout "app"
   before_action :require_manager!
   before_action :set_employee, only: [:show, :edit, :update, :destroy]
 

@@ -24,9 +24,14 @@ class Membership < ApplicationRecord
   belongs_to :user
 
   ROLES = %w[owner manager staff].freeze
+  ROLE_I18N = { "owner" => "擁有者", "manager" => "店長", "staff" => "員工" }.freeze
 
   enum :role, { owner: "owner", manager: "manager", staff: "staff" }, validate: true
 
   validates :role, presence: true
   validates :user_id, uniqueness: { scope: :account_id, message: "已是此帳號成員" }
+
+  def role_i18n
+    ROLE_I18N[role] || role
+  end
 end

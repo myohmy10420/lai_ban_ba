@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "來班吧" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-slate-50 min-h-screen">
+    <div class="flex min-h-screen">
+
+      <!-- Sidebar -->
+      <aside class="w-60 bg-slate-900 text-white flex flex-col fixed inset-y-0 left-0 z-40">
+        <!-- Logo -->
+        <div class="h-16 flex items-center px-5 border-b border-slate-700">
+          <%= link_to dashboard_path, class: "flex items-center gap-2" do %>
+            <div class="bg-orange-500 p-1.5 rounded-lg">
+              <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <span class="font-bold text-lg text-white">來班吧</span>
+          <% end %>
+        </div>
+
+        <!-- Account switcher -->
+        <% if current_account %>
+          <div class="px-4 py-3 border-b border-slate-700">
+            <div class="flex items-center gap-2 text-sm">
+              <div class="w-7 h-7 bg-orange-500 rounded-md flex items-center justify-center font-bold text-white text-xs flex-shrink-0">
+                <%= current_account.name.first %>
+              </div>
+              <div class="min-w-0">
+                <div class="font-medium text-white truncate"><%= current_account.name %></div>
+                <div class="text-slate-400 text-xs"><%= current_membership&.role_i18n %></div>
+              </div>
+            </div>
+            <% other_accounts = current_user.accounts.where.not(id: current_account.id) %>
+            <% if other_accounts.any? %>
+              <div class="mt-2 space-y-1">
+                <% other_accounts.each do |account| %>
+                  <%= button_to switch_account_path(account), method: :post,
+                        class: "w-full text-left px-2 py-1 text-xs text-slate-400 hover:text-white rounded hover:bg-slate-700 transition flex items-center gap-2" do %>
+                    <div class="w-5 h-5 bg-slate-600 rounded text-xs flex items-center justify-center"><%= account.name.first %></div>
+                    <span class="truncate"><%= account.name %></span>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <!-- Nav -->
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          <%= nav_link_to "儀表板", dashboard_path,
+                icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 012-2h4a2 2 0 012 2v4a2 2 0 01-2 2H5a2 2 0 01-2-2V7zm10 0a2 2 0 012-2h4a2 2 0 012 2v4a2 2 0 01-2 2h-4a2 2 0 01-2-2V7zM3 17a2 2 0 012-2h4a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h4a2 2 0 012 2v2a2 2 0 01-2 2h-4a2 2 0 01-2-2v-2z"/>'.html_safe %>
+          <%= nav_link_to "班表", shifts_path,
+                icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>'.html_safe %>
+          <%= nav_link_to "員工", employees_path,
+                icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>'.html_safe %>
+          <% if current_membership&.owner? %>
+            <%= nav_link_to "門市", locations_path,
+                  icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>'.html_safe %>
+          <% end %>
+        </nav>
+
+        <!-- Bottom: user + sign out -->
+        <div class="border-t border-slate-700 px-4 py-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 min-w-0">
+              <div class="w-7 h-7 bg-slate-600 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0">
+                <%= current_user.name.first %>
+              </div>
+              <span class="text-sm text-slate-300 truncate"><%= current_user.name %></span>
+            </div>
+            <%= link_to destroy_user_session_path, data: { turbo_method: :delete },
+                  class: "text-slate-400 hover:text-white transition flex-shrink-0", title: "登出" do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+              </svg>
+            <% end %>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <div class="flex-1 ml-60 flex flex-col min-h-screen">
+        <!-- Top bar -->
+        <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-30">
+          <h1 class="text-lg font-semibold text-slate-800"><%= content_for(:page_title) { "" } %></h1>
+          <div class="flex items-center gap-3">
+            <%= yield :header_actions %>
+          </div>
+        </header>
+
+        <!-- Flash messages -->
+        <div id="flash" class="px-6 pt-4">
+          <%= render "shared/flash" %>
+        </div>
+
+        <!-- Page content -->
+        <main class="flex-1 px-6 py-4">
+          <%= yield %>
+        </main>
+      </div>
+
+    </div>
+  </body>
+</html>

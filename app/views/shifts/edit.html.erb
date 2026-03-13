@@ -1,0 +1,7 @@
+<% content_for :page_title, "編輯班次" %>
+
+<div class="max-w-lg bg-white rounded-xl border border-slate-200 p-6">
+  <%= form_with model: @shift, url: shift_path(@shift), method: :patch do |f| %>
+    <%= render "form", shift: @shift, f: f %>
+  <% end %>
+</div>

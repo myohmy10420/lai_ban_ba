@@ -1,0 +1,68 @@
+<% content_for :page_title, "員工管理" %>
+<% content_for :header_actions do %>
+  <%= link_to "新增員工", new_employee_path, class: "bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition" %>
+<% end %>
+
+<div class="bg-white rounded-xl border border-slate-200">
+  <% if @employees.empty? %>
+    <div class="py-16 text-center">
+      <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      <p class="text-slate-400 text-sm">還沒有員工</p>
+      <%= link_to "新增第一位員工", new_employee_path, class: "mt-2 inline-block text-sm text-orange-500 hover:underline" %>
+    </div>
+  <% else %>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-100 text-left">
+          <th class="px-5 py-3 font-medium text-slate-500">姓名</th>
+          <th class="px-5 py-3 font-medium text-slate-500">電話</th>
+          <th class="px-5 py-3 font-medium text-slate-500">主要門市</th>
+          <th class="px-5 py-3 font-medium text-slate-500">狀態</th>
+          <th class="px-5 py-3 font-medium text-slate-500">到職日</th>
+          <th class="px-5 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <% @employees.each do |employee| %>
+          <% status_class = { "active" => "bg-green-100 text-green-700", "inactive" => "bg-slate-100 text-slate-500", "pending" => "bg-amber-100 text-amber-700" }[employee.status] %>
+          <% status_label = { "active" => "在職", "inactive" => "離職", "pending" => "待入職" }[employee.status] %>
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-semibold text-sm flex-shrink-0">
+                  <%= employee.name.first %>
+                </div>
+                <div>
+                  <div class="font-medium text-slate-800"><%= employee.name %></div>
+                  <% if employee.user %>
+                    <div class="text-xs text-slate-400">已連結帳號</div>
+                  <% end %>
+                </div>
+              </div>
+            </td>
+            <td class="px-5 py-4 text-slate-500"><%= employee.phone.presence || "—" %></td>
+            <td class="px-5 py-4 text-slate-600"><%= employee.location&.name || "—" %></td>
+            <td class="px-5 py-4">
+              <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium <%= status_class %>">
+                <%= status_label %>
+              </span>
+            </td>
+            <td class="px-5 py-4 text-slate-500">
+              <%= employee.start_on&.strftime("%Y/%m/%d") || "—" %>
+            </td>
+            <td class="px-5 py-4 text-right">
+              <div class="flex items-center justify-end gap-3">
+                <%= link_to "編輯", edit_employee_path(employee), class: "text-slate-400 hover:text-orange-500 transition" %>
+                <%= button_to "刪除", employee_path(employee), method: :delete,
+                      data: { turbo_confirm: "確定刪除「#{employee.name}」？" },
+                      class: "text-slate-400 hover:text-red-500 transition bg-transparent border-0 p-0 cursor-pointer" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

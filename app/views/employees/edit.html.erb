@@ -1,0 +1,7 @@
+<% content_for :page_title, "編輯員工：#{@employee.name}" %>
+
+<div class="max-w-2xl bg-white rounded-xl border border-slate-200 p-6">
+  <%= form_with model: @employee, url: employee_path(@employee), method: :patch do |f| %>
+    <%= render "form", employee: @employee, f: f %>
+  <% end %>
+</div>
