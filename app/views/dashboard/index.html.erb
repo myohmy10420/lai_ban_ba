@@ -1,0 +1,91 @@
+<% content_for :page_title, "儀表板" %>
+<% content_for :header_actions do %>
+  <%= link_to "新增班次", new_shift_path, class: "bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition" %>
+<% end %>
+
+<!-- Stats row -->
+<div class="grid grid-cols-3 gap-4 mb-6">
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <div class="text-2xl font-bold text-slate-900"><%= @active_employees_count %></div>
+    <div class="text-sm text-slate-500 mt-1">在職員工</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <div class="text-2xl font-bold text-slate-900"><%= @locations.size %></div>
+    <div class="text-sm text-slate-500 mt-1">門市數</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <div class="text-2xl font-bold text-slate-900"><%= @upcoming_shifts.size %></div>
+    <div class="text-sm text-slate-500 mt-1">即將到來班次</div>
+  </div>
+</div>
+
+<!-- Upcoming shifts -->
+<div class="bg-white rounded-xl border border-slate-200">
+  <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+    <h2 class="font-semibold text-slate-800">即將到來班次</h2>
+    <%= link_to "查看全部", shifts_path, class: "text-sm text-orange-500 hover:text-orange-600" %>
+  </div>
+
+  <% if @upcoming_shifts.empty? %>
+    <div class="py-16 text-center">
+      <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+      <p class="text-slate-400 text-sm">目前沒有排定班次</p>
+      <%= link_to "新增第一個班次", new_shift_path, class: "mt-2 inline-block text-sm text-orange-500 hover:underline" %>
+    </div>
+  <% else %>
+    <div class="divide-y divide-slate-100">
+      <% @upcoming_shifts.each do |shift| %>
+        <div class="px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition">
+          <div class="flex items-center gap-4">
+            <!-- Date block -->
+            <div class="text-center bg-orange-50 rounded-lg px-3 py-2 min-w-[52px]">
+              <div class="text-xs text-orange-400 font-medium"><%= shift.starts_at.strftime("%-m月") %></div>
+              <div class="text-xl font-bold text-orange-600 leading-tight"><%= shift.starts_at.strftime("%-d") %></div>
+            </div>
+            <div>
+              <div class="font-medium text-slate-800 text-sm">
+                <%= shift.location.name %>
+                <span class="ml-1 px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-xs">
+                  <%= ApplicationHelper::ROLE_TAG_I18N[shift.role_tag] || shift.role_tag %>
+                </span>
+              </div>
+              <div class="text-xs text-slate-400 mt-0.5">
+                <%= shift.starts_at.strftime("%H:%M") %> – <%= shift.ends_at.strftime("%H:%M") %>
+                （<%= shift.duration_hours %>hr）
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="<%= shift.fully_staffed? ? 'text-green-600' : 'text-amber-500' %>">
+              <%= shift.shift_assignments.where(status: %w[assigned confirmed]).count %> / <%= shift.required_headcount %> 人
+            </span>
+            <%= link_to "詳情", shift_path(shift), class: "text-slate-400 hover:text-orange-500 transition" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Quick links (only show when locations/employees are empty) -->
+<% if @locations.empty? || @active_employees_count == 0 %>
+  <div class="mt-6 bg-orange-50 border border-orange-100 rounded-xl p-5">
+    <h3 class="font-semibold text-orange-800 mb-3">快速設定</h3>
+    <div class="space-y-2">
+      <% if @locations.empty? %>
+        <div class="flex items-center gap-3 text-sm">
+          <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          <%= link_to "新增第一間門市", new_location_path, class: "text-orange-700 hover:underline font-medium" %>
+        </div>
+      <% end %>
+      <% if @active_employees_count == 0 %>
+        <div class="flex items-center gap-3 text-sm">
+          <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          <%= link_to "新增第一位員工", new_employee_path, class: "text-orange-700 hover:underline font-medium" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

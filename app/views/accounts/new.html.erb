@@ -1,0 +1,44 @@
+<% content_for :title, "建立帳號 – 來班吧" %>
+
+<div class="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+  <div class="w-full max-w-md">
+    <!-- Logo -->
+    <div class="flex items-center justify-center gap-2 mb-8">
+      <div class="bg-orange-500 p-2 rounded-xl">
+        <svg class="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+      </div>
+      <span class="font-bold text-2xl text-orange-600">來班吧</span>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold text-slate-900">建立你的帳號</h1>
+        <p class="text-slate-500 text-sm mt-1">填入你的品牌或店家名稱，一分鐘即可開始使用</p>
+      </div>
+
+      <%= render "shared/flash" %>
+
+      <%= form_with model: @account, url: accounts_path, class: "space-y-5" do |f| %>
+        <%= render "shared/form_errors", object: @account %>
+
+        <div>
+          <%= f.label :name, "品牌 / 店家名稱", class: "block text-sm font-medium text-slate-700 mb-1.5" %>
+          <%= f.text_field :name,
+                placeholder: "例：幸福滷味、鹽酥雞王",
+                class: "w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent",
+                autofocus: true %>
+          <p class="text-xs text-slate-400 mt-1">之後可以在設定裡修改</p>
+        </div>
+
+        <%= f.submit "建立帳號，開始排班 →",
+              class: "w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition cursor-pointer" %>
+      <% end %>
+    </div>
+
+    <p class="text-center text-xs text-slate-400 mt-4">
+      已有帳號？<%= link_to "選擇帳號", dashboard_path, class: "text-orange-500 hover:underline" %>
+    </p>
+  </div>
+</div>

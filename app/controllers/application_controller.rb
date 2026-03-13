@@ -36,4 +36,13 @@ class ApplicationController < ActionController::Base
       redirect_to dashboard_path, alert: "僅限帳號擁有者"
     end
   end
+
+  # Devise hook: 登入後的 redirect 目標
+  def after_sign_in_path_for(resource)
+    if resource.accounts.any?
+      dashboard_path
+    else
+      new_account_path
+    end
+  end
 end

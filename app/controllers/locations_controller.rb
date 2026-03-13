@@ -1,4 +1,5 @@
 class LocationsController < ApplicationController
+  layout "app"
   before_action :require_owner!
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 
