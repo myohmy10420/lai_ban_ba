@@ -29,5 +29,15 @@
 class Employee < ApplicationRecord
   belongs_to :account
   belongs_to :location
-  belongs_to :user
+  belongs_to :user, optional: true
+
+  has_many :shift_assignments, dependent: :destroy
+  has_many :shifts, through: :shift_assignments
+
+  enum :status, { active: "active", inactive: "inactive", pending: "pending" }, validate: true
+
+  validates :name, presence: true
+  validates :status, presence: true
+
+  scope :active, -> { where(status: "active") }
 end
