@@ -19,4 +19,9 @@
 #
 class Location < ApplicationRecord
   belongs_to :account
+
+  has_many :employees, dependent: :nullify
+  has_many :shifts, dependent: :destroy
+
+  validates :name, presence: true
 end

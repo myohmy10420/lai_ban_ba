@@ -22,4 +22,11 @@
 class Membership < ApplicationRecord
   belongs_to :account
   belongs_to :user
+
+  ROLES = %w[owner manager staff].freeze
+
+  enum :role, { owner: "owner", manager: "manager", staff: "staff" }, validate: true
+
+  validates :role, presence: true
+  validates :user_id, uniqueness: { scope: :account_id, message: "已是此帳號成員" }
 end
