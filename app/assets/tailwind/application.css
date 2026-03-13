@@ -5,7 +5,7 @@
     @apply outline-ring/50;
   }
   body {
-    @apply bg-slate-900 text-white;
+    @apply bg-white text-slate-900;
   }
 }
 
