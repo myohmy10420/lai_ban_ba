@@ -10,47 +10,59 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_13_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_14_152917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "accounts", force: :cascade do |t|
-    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "employees", force: :cascade do |t|
     t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.date "end_on"
     t.bigint "location_id", null: false
-    t.bigint "user_id"
     t.string "name", null: false
     t.string "phone"
     t.date "start_on"
-    t.date "end_on"
     t.string "status"
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["account_id"], name: "index_employees_on_account_id"
     t.index ["location_id"], name: "index_employees_on_location_id"
     t.index ["user_id"], name: "index_employees_on_user_id"
   end
 
+  create_table "location_business_hours", force: :cascade do |t|
+    t.time "closes_at"
+    t.datetime "created_at", null: false
+    t.integer "day_of_week", null: false
+    t.boolean "is_closed", default: false, null: false
+    t.bigint "location_id", null: false
+    t.time "opens_at"
+    t.datetime "updated_at", null: false
+    t.index ["location_id", "day_of_week"], name: "index_location_business_hours_on_location_id_and_day_of_week", unique: true
+    t.index ["location_id"], name: "index_location_business_hours_on_location_id"
+  end
+
   create_table "locations", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.string "name"
     t.string "address"
     t.datetime "created_at", null: false
+    t.string "name"
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_locations_on_account_id"
   end
 
   create_table "memberships", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.bigint "user_id", null: false
-    t.string "role"
     t.datetime "created_at", null: false
+    t.string "role"
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["account_id"], name: "index_memberships_on_account_id"
     t.index ["user_id", "account_id"], name: "index_memberships_on_user_id_and_account_id", unique: true
     t.index ["user_id"], name: "index_memberships_on_user_id"
@@ -58,12 +70,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_13_000001) do
 
   create_table "shift_assignments", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.bigint "shift_id", null: false
-    t.bigint "employee_id", null: false
-    t.string "status"
-    t.bigint "assigned_by_user_id"
     t.datetime "assigned_at"
+    t.bigint "assigned_by_user_id"
     t.datetime "created_at", null: false
+    t.bigint "employee_id", null: false
+    t.bigint "shift_id", null: false
+    t.string "status"
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_shift_assignments_on_account_id"
     t.index ["employee_id"], name: "index_shift_assignments_on_employee_id"
@@ -72,14 +84,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_13_000001) do
 
   create_table "shifts", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.bigint "location_id", null: false
-    t.datetime "starts_at"
+    t.datetime "created_at", null: false
     t.datetime "ends_at"
+    t.bigint "location_id", null: false
+    t.integer "lock_version"
+    t.text "note"
     t.integer "required_headcount"
     t.string "role_tag"
     t.string "source"
-    t.integer "lock_version"
-    t.datetime "created_at", null: false
+    t.datetime "starts_at"
     t.datetime "updated_at", null: false
     t.index ["account_id", "starts_at"], name: "index_shifts_on_account_id_and_starts_at"
     t.index ["account_id"], name: "index_shifts_on_account_id"
@@ -88,19 +101,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_13_000001) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "name", null: false
-    t.string "phone"
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "last_sign_in_at"
-    t.string "last_sign_in_ip"
+    t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
     t.datetime "created_at", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.datetime "last_sign_in_at"
+    t.string "last_sign_in_ip"
+    t.string "name", null: false
+    t.string "phone"
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.datetime "updated_at", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -110,6 +123,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_13_000001) do
   add_foreign_key "employees", "accounts"
   add_foreign_key "employees", "locations"
   add_foreign_key "employees", "users"
+  add_foreign_key "location_business_hours", "locations"
   add_foreign_key "locations", "accounts"
   add_foreign_key "memberships", "accounts"
   add_foreign_key "memberships", "users"

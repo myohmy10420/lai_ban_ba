@@ -64,10 +64,20 @@
 
       <%= form_with(model: resource, scope: resource_name, url: registration_path(resource_name), html: { style: "display:flex;flex-direction:column;gap:16px;" }, data: { turbo: false }) do |f| %>
 
+        <%# Name %>
+        <div>
+          <%= f.label :name, "您的姓名", style: "display:block;font-size:13px;font-weight:600;color:#475569;margin-bottom:6px;" %>
+          <%= f.text_field :name, autofocus: true, autocomplete: "name",
+              placeholder: "王小明",
+              style: "width:100%;padding:11px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;color:#1e293b;outline:none;box-sizing:border-box;",
+              onfocus: "this.style.borderColor='#f97316';this.style.boxShadow='0 0 0 3px rgba(249,115,22,0.15)';this.style.background='#fff'",
+              onblur:  "this.style.borderColor='#e2e8f0';this.style.boxShadow='none';this.style.background='#f8fafc'" %>
+        </div>
+
         <%# Email %>
         <div>
           <%= f.label :email, "電子信箱", style: "display:block;font-size:13px;font-weight:600;color:#475569;margin-bottom:6px;" %>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email",
+          <%= f.email_field :email, autocomplete: "email",
               placeholder: "you@example.com",
               style: "width:100%;padding:11px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;color:#1e293b;outline:none;box-sizing:border-box;",
               onfocus: "this.style.borderColor='#f97316';this.style.boxShadow='0 0 0 3px rgba(249,115,22,0.15)';this.style.background='#fff'",

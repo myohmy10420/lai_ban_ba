@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   layout :resolve_layout
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   helper_method :current_account, :current_membership
 
@@ -36,6 +37,11 @@ class ApplicationController < ActionController::Base
     unless current_membership&.owner?
       redirect_to dashboard_path, alert: "僅限帳號擁有者"
     end
+  end
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name])
   end
 
   def resolve_layout

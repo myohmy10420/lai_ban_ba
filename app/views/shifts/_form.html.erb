@@ -1,14 +1,17 @@
 <%= render "shared/form_errors", object: shift %>
 
-<div class="space-y-4">
+<div class="space-y-4" data-controller="shift-form">
+  <%# 門市 %>
   <div>
     <%= f.label :location_id, "門市", class: "block text-sm font-medium text-slate-700 mb-1.5" %>
     <%= f.select :location_id,
           options_from_collection_for_select(@locations, :id, :name, shift.location_id),
           { prompt: "選擇門市" },
-          class: "w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-white" %>
+          class: "w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-white",
+          data: { shift_form_target: "location", action: "change->shift-form#autofill" } %>
   </div>
 
+  <%# 職位 / 人數 %>
   <div class="grid grid-cols-2 gap-4">
     <div>
       <%= f.label :role_tag, "職位", class: "block text-sm font-medium text-slate-700 mb-1.5" %>
@@ -26,19 +29,40 @@
     </div>
   </div>
 
+  <%# 日期（獨立一欄，改變時觸發 autofill）%>
+  <div>
+    <label class="block text-sm font-medium text-slate-700 mb-1.5">班次日期</label>
+    <input type="date"
+           value="<%= shift.starts_at&.strftime("%Y-%m-%d") || Date.today.strftime("%Y-%m-%d") %>"
+           class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+           data-shift-form-target="date"
+           data-action="change->shift-form#autofill">
+    <p data-shift-form-target="hint" class="text-xs text-slate-400 mt-1"></p>
+  </div>
+
+  <%# 開始 / 結束時間 %>
   <div class="grid grid-cols-2 gap-4">
     <div>
       <%= f.label :starts_at, "開始時間", class: "block text-sm font-medium text-slate-700 mb-1.5" %>
       <%= f.datetime_local_field :starts_at,
             value: shift.starts_at&.strftime("%Y-%m-%dT%H:%M"),
-            class: "w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent" %>
+            class: "w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent",
+            data: { shift_form_target: "startsAt" } %>
     </div>
     <div>
       <%= f.label :ends_at, "結束時間", class: "block text-sm font-medium text-slate-700 mb-1.5" %>
       <%= f.datetime_local_field :ends_at,
             value: shift.ends_at&.strftime("%Y-%m-%dT%H:%M"),
-            class: "w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent" %>
+            class: "w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent",
+            data: { shift_form_target: "endsAt" } %>
     </div>
+  </div>
+
+  <%# 備註 %>
+  <div>
+    <%= f.label :note, "備註", class: "block text-sm font-medium text-slate-700 mb-1.5" %>
+    <%= f.text_area :note, rows: 2, placeholder: "例：需要備餐、負責開店…",
+          class: "w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent resize-none" %>
   </div>
 
   <%= f.hidden_field :lock_version %>

@@ -9,8 +9,22 @@ class LocationsController < ApplicationController
   def show
   end
 
+  def business_hours
+    day = params[:day_of_week].to_i
+    bh = @location.business_hours.find_by(day_of_week: day)
+    if bh && !bh.is_closed?
+      render json: {
+        opens_at: bh.opens_at.strftime("%H:%M"),
+        closes_at: bh.closes_at.strftime("%H:%M")
+      }
+    else
+      render json: { closed: true }
+    end
+  end
+
   def new
     @location = current_account.locations.new
+    build_missing_business_hours(@location)
   end
 
   def create
@@ -23,6 +37,7 @@ class LocationsController < ApplicationController
   end
 
   def edit
+    build_missing_business_hours(@location)
   end
 
   def update
@@ -45,6 +60,16 @@ class LocationsController < ApplicationController
   end
 
   def location_params
-    params.require(:location).permit(:name, :address)
+    params.require(:location).permit(
+      :name, :address,
+      business_hours_attributes: [:id, :day_of_week, :opens_at, :closes_at, :is_closed]
+    )
+  end
+
+  def build_missing_business_hours(location)
+    existing_days = location.business_hours.map(&:day_of_week)
+    (0..6).each do |day|
+      location.business_hours.build(day_of_week: day) unless existing_days.include?(day)
+    end
   end
 end

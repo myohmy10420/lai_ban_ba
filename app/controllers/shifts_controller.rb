@@ -18,7 +18,7 @@ class ShiftsController < ApplicationController
   end
 
   def new
-    @shift = current_account.shifts.new(source: :manual)
+    @shift = current_account.shifts.new(source: "manual")
     @locations = current_account.locations.order(:name)
   end
 
@@ -63,6 +63,6 @@ class ShiftsController < ApplicationController
   def shift_params
     params.require(:shift).permit(:location_id, :starts_at, :ends_at,
                                   :required_headcount, :role_tag, :source,
-                                  :lock_version)
+                                  :note, :lock_version)
   end
 end

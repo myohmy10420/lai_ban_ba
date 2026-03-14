@@ -22,6 +22,9 @@ class Location < ApplicationRecord
 
   has_many :employees, dependent: :nullify
   has_many :shifts, dependent: :destroy
+  has_many :business_hours, -> { order(:day_of_week) }, class_name: "LocationBusinessHour",
+           dependent: :destroy, inverse_of: :location
+  accepts_nested_attributes_for :business_hours
 
   validates :name, presence: true
 end

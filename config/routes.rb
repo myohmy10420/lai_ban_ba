@@ -19,7 +19,11 @@ Rails.application.routes.draw do
   # 核心業務資源（都在 current_account 的 scope 下）
   get "dashboard", to: "dashboard#index", as: :dashboard
 
-  resources :locations
+  resources :locations do
+    member do
+      get :business_hours
+    end
+  end
   resources :employees
 
   resources :shifts do
