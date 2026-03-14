@@ -36,7 +36,7 @@ class ShiftsController < ApplicationController
   end
 
   def create
-    @shift = current_account.shifts.new(shift_params)
+    @shift = current_account.shifts.new(shift_params.merge(source: "manual"))
     if @shift.save
       redirect_to shifts_path, notice: "班次建立成功"
     else
@@ -155,7 +155,7 @@ class ShiftsController < ApplicationController
 
   def shift_params
     params.require(:shift).permit(:location_id, :starts_at, :ends_at,
-                                  :required_headcount, :role_tag, :source,
+                                  :required_headcount, :role_tag,
                                   :note, :lock_version)
   end
 end
