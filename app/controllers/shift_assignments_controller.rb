@@ -1,5 +1,4 @@
 class ShiftAssignmentsController < ApplicationController
-  layout "app"
   before_action :require_manager!
   before_action :set_shift, only: [:create]
   before_action :set_assignment, only: [:destroy, :confirm, :decline, :cancel]

@@ -1,5 +1,4 @@
 class ShiftsController < ApplicationController
-  layout "app"
   before_action :require_account!
   before_action :set_shift, only: [:show, :edit, :update, :destroy]
 

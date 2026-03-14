@@ -1,4 +1,5 @@
 class AccountsController < ApplicationController
+  layout "application"
   before_action :authenticate_user!
 
   def new

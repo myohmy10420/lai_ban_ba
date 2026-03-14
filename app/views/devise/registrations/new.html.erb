@@ -161,10 +161,10 @@
 
   inp.addEventListener('input', function(){
     var v = inp.value, score = 0;
-    if (v.length >= 8)          score++;
-    if (/[A-Z]/.test(v))        score++;
-    if (/[0-9]/.test(v))        score++;
-    if (/[^A-Za-z0-9]/.test(v)) score++;
+    if (v.length >= 8)    score++;
+    if (/[a-z]/.test(v))  score++;
+    if (/[A-Z]/.test(v))  score++;
+    if (/[0-9]/.test(v))  score++;
 
     segs.forEach(function(s, i){
       s.style.background = (i < score) ? colors[score] : '#e2e8f0';

@@ -36,8 +36,15 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :email, uniqueness: { case_sensitive: false }
+  validate :password_complexity, if: -> { password.present? }
 
   private
+
+  def password_complexity
+    return if password =~ /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+\z/
+
+    errors.add(:password, "需包含英文大寫、小寫及數字")
+  end
 
   def downcase_email
     self.email = email.downcase if email.present?

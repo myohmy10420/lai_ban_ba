@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   allow_browser versions: :modern
+  layout :resolve_layout
 
   helper_method :current_account, :current_membership
 
@@ -35,6 +36,10 @@ class ApplicationController < ActionController::Base
     unless current_membership&.owner?
       redirect_to dashboard_path, alert: "僅限帳號擁有者"
     end
+  end
+
+  def resolve_layout
+    devise_controller? ? "application" : "app"
   end
 
   # Devise hook: 登入後的 redirect 目標
