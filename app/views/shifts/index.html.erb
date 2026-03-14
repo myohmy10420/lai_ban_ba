@@ -1,99 +1,20 @@
 <% content_for :page_title, "班表" %>
 <% content_for :header_actions do %>
-  <%= link_to "新增班次", new_shift_path, class: "bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition" %>
+  <div class="flex items-center gap-2">
+    <%# 視角切換 %>
+    <div class="flex rounded-lg border border-slate-200 overflow-hidden text-sm">
+      <%= link_to "日", shifts_path(view: "day", date: (@view_mode == "week" ? @week_start.to_s : @date&.to_s)),
+            class: "px-3 py-1.5 transition #{@view_mode == 'day' ? 'bg-orange-500 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}" %>
+      <%= link_to "週", shifts_path(view: "week", date: (@view_mode == "week" ? @week_start.to_s : @date&.to_s)),
+            class: "px-3 py-1.5 transition #{@view_mode == 'week' ? 'bg-orange-500 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}" %>
+    </div>
+    <%= link_to "新增班次", new_shift_path,
+          class: "bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition" %>
+  </div>
 <% end %>
 
-<!-- Date navigation -->
-<div class="flex items-center gap-3 mb-5">
-  <%= link_to shifts_path(date: (@date - 1.day).to_s),
-        class: "p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition" do %>
-    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-    </svg>
-  <% end %>
-
-  <div class="bg-white border border-slate-200 rounded-lg px-4 py-2 text-sm font-medium text-slate-700">
-    <%= @date.strftime("%Y年 %-m月 %-d日") %>
-    <% if @date == Date.today %>
-      <span class="ml-1 text-xs text-orange-500">今天</span>
-    <% end %>
-  </div>
-
-  <%= link_to shifts_path(date: (@date + 1.day).to_s),
-        class: "p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition" do %>
-    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-    </svg>
-  <% end %>
-
-  <% unless @date == Date.today %>
-    <%= link_to "今天", shifts_path, class: "text-sm text-orange-500 hover:text-orange-600 ml-1" %>
-  <% end %>
-</div>
-
-<!-- Shifts list -->
-<% if @shifts.empty? %>
-  <div class="bg-white rounded-xl border border-slate-200 py-16 text-center">
-    <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-    </svg>
-    <p class="text-slate-400 text-sm">這天沒有班次</p>
-    <%= link_to "新增班次", new_shift_path, class: "mt-2 inline-block text-sm text-orange-500 hover:underline" %>
-  </div>
+<% if @view_mode == "week" %>
+  <%= render "shifts/week_view" %>
 <% else %>
-  <div class="space-y-3">
-    <% @shifts.each do |shift| %>
-      <% assigned_count = shift.shift_assignments.count { |a| %w[assigned confirmed].include?(a.status) } %>
-      <%= link_to shift_path(shift), class: "block bg-white rounded-xl border border-slate-200 px-5 py-4 hover:border-orange-300 transition" do %>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <div class="text-center">
-              <div class="text-lg font-bold text-slate-800">
-                <%= shift.starts_at.strftime("%H:%M") %> – <%= shift.ends_at.strftime("%H:%M") %>
-              </div>
-              <div class="text-xs text-slate-400"><%= shift.duration_hours %>hr</div>
-            </div>
-            <div class="w-px h-10 bg-slate-200"></div>
-            <div>
-              <div class="font-medium text-slate-700"><%= shift.location.name %></div>
-              <div class="flex items-center gap-2 mt-0.5">
-                <span class="px-2 py-0.5 bg-slate-100 text-slate-500 rounded text-xs">
-                  <%= ApplicationHelper::ROLE_TAG_I18N[shift.role_tag] || shift.role_tag %>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="flex items-center gap-4">
-            <!-- Staffing indicator -->
-            <div class="text-right">
-              <div class="text-sm font-semibold <%= assigned_count >= shift.required_headcount ? 'text-green-600' : 'text-amber-500' %>">
-                <%= assigned_count %> / <%= shift.required_headcount %> 人
-              </div>
-              <div class="text-xs text-slate-400">
-                <%= shift.fully_staffed? ? "人員齊全" : "仍需補班" %>
-              </div>
-            </div>
-            <!-- Avatars -->
-            <% if shift.shift_assignments.any? %>
-              <div class="flex -space-x-2">
-                <% shift.shift_assignments.first(3).each do |sa| %>
-                  <div class="w-7 h-7 bg-orange-100 border-2 border-white rounded-full flex items-center justify-center text-xs font-medium text-orange-600">
-                    <%= sa.employee.name.first %>
-                  </div>
-                <% end %>
-                <% if shift.shift_assignments.size > 3 %>
-                  <div class="w-7 h-7 bg-slate-200 border-2 border-white rounded-full flex items-center justify-center text-xs text-slate-500">
-                    +<%= shift.shift_assignments.size - 3 %>
-                  </div>
-                <% end %>
-              </div>
-            <% end %>
-            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
+  <%= render "shifts/day_view" %>
 <% end %>

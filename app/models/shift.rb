@@ -47,8 +47,24 @@ class Shift < ApplicationRecord
     ((ends_at - starts_at) / 3600.0).round(1)
   end
 
+  def assigned_count
+    shift_assignments.select { |a| %w[assigned confirmed].include?(a.status) }.count
+  end
+
+  def staffing_ratio
+    return 0.0 if required_headcount.to_i == 0
+    assigned_count.to_f / required_headcount
+  end
+
+  def staffing_status
+    ratio = staffing_ratio
+    return :understaffed if ratio < 1.0
+    return :overstaffed  if ratio > 1.0
+    :fully_staffed
+  end
+
   def fully_staffed?
-    shift_assignments.where(status: %w[assigned confirmed]).count >= required_headcount
+    staffing_status == :fully_staffed
   end
 
   private

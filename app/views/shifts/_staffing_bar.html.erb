@@ -1,0 +1,16 @@
+<%# locals: (shift:) %>
+<% bar_color = { understaffed: "bg-red-400", fully_staffed: "bg-green-400", overstaffed: "bg-amber-400" }[shift.staffing_status] %>
+<% bar_width  = [(shift.staffing_ratio * 100).round, 100].min %>
+<% label_color = { understaffed: "text-red-600", fully_staffed: "text-green-600", overstaffed: "text-amber-500" }[shift.staffing_status] %>
+
+<div class="text-right">
+  <div class="text-sm font-semibold <%= label_color %>">
+    <%= shift.assigned_count %> / <%= shift.required_headcount %> 人
+  </div>
+  <div class="w-20 h-1.5 bg-slate-100 rounded-full mt-1 ml-auto">
+    <div class="h-1.5 rounded-full <%= bar_color %>" style="width: <%= bar_width %>%"></div>
+  </div>
+  <div class="text-xs text-slate-400 mt-0.5">
+    <%= { understaffed: "仍需補班", fully_staffed: "人員齊全", overstaffed: "人力過剩" }[shift.staffing_status] %>
+  </div>
+</div>

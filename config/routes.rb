@@ -27,6 +27,10 @@ Rails.application.routes.draw do
   resources :employees
 
   resources :shifts do
+    collection do
+      post :copy_from_last_week
+      post :batch_create
+    end
     resources :shift_assignments, only: [:create, :destroy], shallow: true do
       member do
         patch :confirm
