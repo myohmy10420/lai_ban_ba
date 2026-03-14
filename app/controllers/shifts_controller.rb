@@ -3,9 +3,18 @@ class ShiftsController < ApplicationController
   before_action :set_shift, only: [:show, :edit, :update, :destroy]
 
   def index
-    @view_mode = params[:view].presence || "day"
+    @view_mode = params[:view].presence || "week"
 
-    if @view_mode == "week"
+    if @view_mode == "month"
+      @month_start = params[:date].present? ? Date.parse(params[:date]).beginning_of_month : Date.today.beginning_of_month
+      @month_end   = @month_start.end_of_month
+      @shifts = current_account.shifts
+                               .where(starts_at: @month_start.beginning_of_day..@month_end.end_of_day)
+                               .includes(:location, shift_assignments: :employee)
+                               .order(:starts_at)
+      @shifts_by_date = @shifts.group_by { |s| s.starts_at.to_date }
+      @locations = current_account.locations.order(:name)
+    elsif @view_mode == "week"
       @week_start = params[:date].present? ? Date.parse(params[:date]).beginning_of_week(:sunday) : Date.today.beginning_of_week(:sunday)
       @week_dates = (@week_start..@week_start + 6.days).to_a
       @shifts = current_account.shifts
@@ -31,7 +40,8 @@ class ShiftsController < ApplicationController
   end
 
   def new
-    @shift = current_account.shifts.new(source: "manual")
+    default_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
+    @shift = current_account.shifts.new(source: "manual", starts_at: default_date)
     @locations = current_account.locations.order(:name)
   end
 

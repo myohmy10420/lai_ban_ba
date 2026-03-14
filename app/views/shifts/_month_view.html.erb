@@ -1,0 +1,158 @@
+<%# 月導覽 %>
+<div class="flex items-center gap-3 mb-4">
+  <%= link_to shifts_path(view: "month", date: (@month_start - 1.month).to_s),
+        class: "p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition" do %>
+    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+    </svg>
+  <% end %>
+
+  <div class="bg-white border border-slate-200 rounded-lg px-4 py-2 text-sm font-medium text-slate-700">
+    <%= @month_start.strftime("%Y年 %-m月") %>
+  </div>
+
+  <%= link_to shifts_path(view: "month", date: (@month_start + 1.month).to_s),
+        class: "p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition" do %>
+    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    </svg>
+  <% end %>
+
+  <% unless @month_start == Date.today.beginning_of_month %>
+    <%= link_to "本月", shifts_path(view: "month"), class: "text-sm text-orange-500 hover:text-orange-600 ml-1" %>
+  <% end %>
+</div>
+
+<%# 油漆刷 wrapper (toolbar + 月曆共用同一個 controller) %>
+<div data-controller="paintbrush" data-paintbrush-active-value="false">
+
+  <%# 油漆刷 toolbar %>
+  <div class="bg-white border border-slate-200 rounded-xl p-4 mb-4">
+    <div class="flex items-end gap-4 flex-wrap">
+      <div>
+        <label class="block text-xs font-medium text-slate-500 mb-1">門市</label>
+        <%= select_tag "pb_location",
+              options_from_collection_for_select(@locations, :id, :name),
+              prompt: "選擇門市",
+              class: "border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white",
+              data: { paintbrush_target: "location" } %>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-500 mb-1">職位</label>
+        <%= select_tag "pb_role",
+              options_for_select([["外場", "floor"], ["內場", "kitchen"], ["收銀", "cashier"]]),
+              class: "border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white",
+              data: { paintbrush_target: "roleTag" } %>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-500 mb-1">開始</label>
+        <input type="time" value="09:00"
+               class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+               data-paintbrush-target="startsAt">
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-500 mb-1">結束</label>
+        <input type="time" value="17:00"
+               class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+               data-paintbrush-target="endsAt">
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-500 mb-1">人數</label>
+        <input type="number" value="1" min="1" max="20"
+               class="w-16 border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+               data-paintbrush-target="headcount">
+      </div>
+      <button type="button"
+              data-action="click->paintbrush#toggle"
+              data-paintbrush-target="toggleBtn"
+              class="flex items-center gap-2 px-4 py-1.5 rounded-lg border text-sm font-medium transition border-slate-300 bg-white text-slate-600 hover:bg-orange-50 hover:border-orange-300">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        <span data-paintbrush-target="toggleLabel">開啟油漆刷</span>
+      </button>
+      <p class="text-xs text-slate-400 self-center" data-paintbrush-target="hint"></p>
+    </div>
+  </div>
+
+  <%# 月曆 %>
+  <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+    <%# 星期 header — 用 table 避免 grid purge 問題 %>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #e2e8f0;background:#f8fafc;">
+      <% %w[日 一 二 三 四 五 六].each_with_index do |day, i| %>
+        <div style="padding:10px 0;text-align:center;font-size:12px;font-weight:600;color:#64748b;
+                    <%= i == 0 ? 'color:#f97316;' : i == 6 ? 'color:#94a3b8;' : '' %>">
+          <%= day %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# 日期格 — inline style grid 保證不被 purge %>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);">
+      <% month_calendar_days(@month_start).each_with_index do |date, idx| %>
+        <% col = idx % 7 %>
+        <% border_right = col < 6 ? "border-right:1px solid #f1f5f9;" : "" %>
+        <% border_bottom = "border-bottom:1px solid #f1f5f9;" %>
+
+        <% if date.nil? %>
+          <div style="min-height:110px;background:#f8fafc;<%= border_right %><%= border_bottom %>"></div>
+        <% else %>
+          <% day_shifts = @shifts_by_date[date] || [] %>
+          <% is_today = date == Date.today %>
+          <div style="min-height:110px;padding:6px;<%= border_right %><%= border_bottom %>background:#fff;position:relative;"
+               class="group select-none transition-colors duration-100"
+               data-paintbrush-target="cell"
+               data-date="<%= date %>"
+               data-action="mousedown->paintbrush#cellMousedown mouseenter->paintbrush#cellMouseenter">
+
+            <%# 日期數字列 %>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <span style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+                           border-radius:50%;font-size:12px;font-weight:600;
+                           <%= is_today ? 'background:#f97316;color:#fff;' : 'color:#475569;' %>">
+                <%= date.day %>
+              </span>
+              <%= link_to "+", new_shift_path(date: date.to_s),
+                    style: "font-size:16px;line-height:1;color:#cbd5e1;text-decoration:none;opacity:0;transition:opacity .15s;",
+                    title: "新增班次",
+                    class: "month-add-btn" %>
+            </div>
+
+            <%# 班次縮略卡（最多 3 張）%>
+            <% day_shifts.first(3).each do |shift| %>
+              <% bg, fg, bd = case shift.staffing_status
+                               when :understaffed then ["#fef2f2", "#b91c1c", "#fecaca"]
+                               when :overstaffed  then ["#fffbeb", "#92400e", "#fde68a"]
+                               else                    ["#f0fdf4", "#15803d", "#bbf7d0"]
+                               end %>
+              <%= link_to shift_path(shift),
+                    style: "display:block;border-radius:4px;padding:2px 6px;margin-bottom:2px;
+                            font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+                            background:#{bg};color:#{fg};border:1px solid #{bd};text-decoration:none;",
+                    title: "#{shift.starts_at.strftime('%H:%M')}–#{shift.ends_at.strftime('%H:%M')} #{ApplicationHelper::ROLE_TAG_I18N[shift.role_tag]}" do %>
+                <%= shift.starts_at.strftime("%H:%M") %> <%= ApplicationHelper::ROLE_TAG_I18N[shift.role_tag] %>
+              <% end %>
+            <% end %>
+
+            <%# 溢位 %>
+            <% overflow = day_shifts.size - 3 %>
+            <% if overflow > 0 %>
+              <%= link_to shifts_path(view: "week", date: date.beginning_of_week(:sunday).to_s),
+                    style: "display:block;font-size:11px;color:#94a3b8;padding-left:4px;text-decoration:none;" do %>
+                +<%= overflow %> 個班次
+              <% end %>
+            <% end %>
+
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+  </div>
+</div><%# /paintbrush wrapper %>
+
+<style>
+  .group:hover .month-add-btn { opacity: 1 !important; }
+</style>
